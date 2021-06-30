@@ -72,6 +72,7 @@ namespace webhook.Controllers
                 }
             }
             Buffer.Set(Request, body.ToString());
+            await ToFile();
             return body.ToString();
         }
 
@@ -91,15 +92,7 @@ namespace webhook.Controllers
 
             if (Buffer.HasData)
             {
-                builder.AppendLine($"{Buffer.Method} {Buffer.Path}{Buffer.QueryString} {Buffer.Protocol}");
-
-                foreach (KeyValuePair<string, Microsoft.Extensions.Primitives.StringValues> header in Buffer.Headers)
-                {
-                    builder.AppendLine($"{header.Key}: {string.Join(" ", header.Value)}");
-                }
-                builder.AppendLine();
-
-                builder.Append(Buffer.Body);
+                builder.Append(Buffer.ToString());
             }
             else 
             {
@@ -116,6 +109,34 @@ namespace webhook.Controllers
                 builder.AppendLine($"{Request.Scheme}://{Request.Host}/buffer/utf-8/echo");
             }
             return builder.ToString();
+        }
+
+        public async Task ToFile()
+        {
+            string path = "./log";
+            string file = "post.log";
+
+            try
+            {
+                if (!System.IO.Directory.Exists(path))
+                {
+                    System.IO.Directory.CreateDirectory(path);
+                }
+
+                using (var stream = System.IO.File.AppendText(Path.Combine(path, file)))
+                {
+                    await stream.WriteLineAsync(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    await stream.WriteLineAsync("-------------------");
+
+                    await stream.WriteAsync(this.Buffer.ToString());
+                    await stream.WriteLineAsync();
+                    await stream.WriteLineAsync();
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
     

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace webhook
@@ -30,6 +31,23 @@ namespace webhook
                 Body = body;
             }
         }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.AppendLine($"{Method} {Path}{QueryString} {Protocol}");
+
+            foreach (KeyValuePair<string, Microsoft.Extensions.Primitives.StringValues> header in Headers)
+            {
+                builder.AppendLine($"{header.Key}: {string.Join(" ", header.Value)}");
+            }
+            builder.AppendLine();
+
+            builder.Append(Body);
+
+            return builder.ToString();
+        }
     }
 
     public interface IBuffer 
@@ -42,5 +60,7 @@ namespace webhook
         public string Protocol { get; }
         IHeaderDictionary Headers { get; }
         public string Body { get; }
+
+        public string ToString();
     }
 }

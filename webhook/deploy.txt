@@ -1,0 +1,7 @@
+﻿Deployment
+----------
+
+Auf webhook Project "Publish"
+- publiziert in das Verzeichnis: C:\@github\webhook\webhook\bin\Release\netcoreapp3.1\publish\
+
+Dann den Inhalt auf den WebServer kopieren, oder siehe Verzeichnis: webdeploy
