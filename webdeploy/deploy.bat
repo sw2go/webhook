@@ -1,3 +1,5 @@
+REM Script für webdeploy, die Datei *.publishsettings muss die Variable userName und userPWD enthalten
+
 cd /d %~dp0
 
 "C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msDeploy.exe" -verb:sync -source:iisApp="C:\@github\webhook\webhook\bin\Release\netcoreapp3.1\publish"  -allowUntrusted -dest:iisApp="aatest.loftsoft.ch",publishSettings="aatest.loftsoft.ch.publishsettings"
